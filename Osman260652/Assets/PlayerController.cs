@@ -13,19 +13,22 @@ public class PlayerController : MonoBehaviour {
     //component of your player character, and choose Space from the dropdown list
     public KeyCode L;//L is the name we gave a keyboard button we chose to be the left movement button.
     public KeyCode R;//R is the name we gave a keyboard button we chose to be the right movement button.
+
     public Transform groundCheck; //an invisible point in space. We use it to see if the player is touching
     // the ground
     public float groundCheckRadius; //a value to determine how big the circle around the player's feet is,
     // and therefore determine how close he is to the ground
     public LayerMask whatIsGround; //this variable stores what is considered a ground to the character
     private bool grounded; //check if the character is standing on solid ground;
-
+    private Animator anim;
+    
     void Start () {
+    anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update () {
-
+  
         if(Input.GetKeyDown(Spacebar)&& grounded) //When user presses the space button ONCE
         {
             Jump(); //see function definition below
@@ -52,6 +55,9 @@ public class PlayerController : MonoBehaviour {
                 GetComponent<SpriteRenderer>().flipX = false;
             }
         }
+        anim.SetFloat("Speed",Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x));
+        anim.SetFloat("Height", GetComponent<Rigidbody2D>().velocity.y);
+        anim.SetBool("Grounded", grounded); 
     }
 
     void Jump()
@@ -64,5 +70,6 @@ public class PlayerController : MonoBehaviour {
     grounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
     //this statement calculates when exactly the character is considered by Unity's engine to be
     // standing on the ground.
+    
 }
 }
